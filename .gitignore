@@ -15,11 +15,12 @@ coverage.txt
 go.work
 go.work.sum
 
-# Local credentials
+# Local credentials and development notes
 .env
 .env.*
 !.env.example
 TOKEN.txt
+/DEV_PROGRESS.md
 
 # Editors and OS
 .idea/
