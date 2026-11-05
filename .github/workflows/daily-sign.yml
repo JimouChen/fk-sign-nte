@@ -1,0 +1,44 @@
+name: 每日签到
+
+on:
+  schedule:
+    # UTC 16:17 = Asia/Shanghai 00:17
+    - cron: '17 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nte-daily-sign
+  cancel-in-progress: false
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: 运行测试
+        run: go test ./...
+
+      - name: 构建签到程序
+        run: go build -trimpath -o bin/nte-sign ./cmd/nte-sign
+
+      - name: 执行签到
+        run: ./bin/nte-sign
+        env:
+          NTE_REFRESH_TOKEN: ${{ secrets.NTE_REFRESH_TOKEN }}
+          NTE_UID: ${{ secrets.NTE_UID }}
+          NTE_DEVICE_ID: ${{ secrets.NTE_DEVICE_ID }}
+          NTE_GAME_ID: ${{ secrets.NTE_GAME_ID }}
+          NTE_ROLE_ID: ${{ secrets.NTE_ROLE_ID }}
+          NTE_REPO_TOKEN: ${{ secrets.NTE_REPO_TOKEN }}
