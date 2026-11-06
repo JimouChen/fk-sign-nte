@@ -36,6 +36,10 @@ go run ./cmd/nte-login
 
 按终端提示输入手机号和短信验证码。登录成功后，终端会显示 `NTE_REFRESH_TOKEN`、`NTE_UID` 和 `NTE_DEVICE_ID`。这些值只会显示在本机终端，不会写入项目文件；请将它们保存到 GitHub 仓库 Secrets，不要发送到聊天中。
 
+### 手机重新登录后需要更新 Token
+
+如果你在手机上使用手机号和验证码重新登录塔吉多，需要重新执行 `go run ./cmd/nte-login` 获取最新的 `NTE_REFRESH_TOKEN`，并将它和新的 `NTE_DEVICE_ID` 更新到 GitHub 仓库 Secrets，否则后续 Actions 可能因旧令牌失效而执行失败。`NTE_REPO_TOKEN` 无法自动同步手机登录产生的新令牌。
+
 ## 本地运行签到
 
 ```bash
