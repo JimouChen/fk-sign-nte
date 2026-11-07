@@ -165,6 +165,21 @@ func TestAlreadySignedRequiresStateConfirmation(t *testing.T) {
 	}
 }
 
+func TestRefreshTokenExpiredEmptyResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusPaymentRequired)
+	}))
+	defer server.Close()
+
+	_, err := testClient(server).Sign(context.Background(), Account{RefreshToken: "expired"})
+	if err == nil || !strings.Contains(err.Error(), "refreshToken 已失效，请重新登录") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if strings.Contains(err.Error(), "返回空响应") {
+		t.Fatalf("HTTP 402 was reported as a generic empty response: %v", err)
+	}
+}
+
 func TestNonJSONResponseDoesNotLeakBody(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadGateway)

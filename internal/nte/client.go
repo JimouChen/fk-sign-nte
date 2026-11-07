@@ -385,11 +385,11 @@ func (e *apiError) Error() string {
 
 func (c *Client) call(ctx context.Context, method, path string, query, form url.Values, headers http.Header, operation string, result any) error {
 	status, response, err := c.request(ctx, method, path, query, form, headers)
-	if err != nil {
-		return fmt.Errorf("%s失败：%w", operation, err)
-	}
 	if status == http.StatusPaymentRequired && operation == "刷新令牌" {
 		return &apiError{operation: operation, message: "refreshToken 已失效，请重新登录"}
+	}
+	if err != nil {
+		return fmt.Errorf("%s失败：%w", operation, err)
 	}
 	if response.Code != 0 {
 		return &apiError{operation: operation, message: responseMessage(response)}

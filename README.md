@@ -71,7 +71,7 @@ go build -trimpath -o bin/nte-sign ./cmd/nte-sign
 签到前刷新令牌时，接口可能返回新的 `refreshToken`。Actions 的临时文件无法可靠保存到次日，因此工具支持通过 GitHub API 自动更新仓库 Secret：
 
 1. 创建一个仅授权当前仓库的 fine-grained personal access token。
-2. 仅授予该仓库 **Actions secrets: Read and write** 权限。
+2. 在该仓库的 **Repository permissions** 中添加 **Secret**（部分文档称 **Secrets**），设置为 **Read and write**，无需添加其他权限。
 3. 将令牌保存为仓库 Secret `NTE_REPO_TOKEN`。
 
 之后，只有接口返回了不同的 `refreshToken`，程序才会使用 NaCl 密封盒加密并更新 `NTE_REFRESH_TOKEN`。令牌值不会写入日志或 Actions 摘要。
