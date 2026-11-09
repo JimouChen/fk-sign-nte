@@ -67,9 +67,9 @@ NTE_DEVICE_ID=...
 
 这些值只显示在本机终端，不会写入项目文件。请妥善保存，不要发送到聊天、提交到 Git 或写入 README。
 
-> **手机重新登录后需要更新凭据**
+> **尽量不要在手机 App 重新登录塔吉多**
 >
-> 如果随后在手机上使用手机号和验证码重新登录塔吉多，旧的 `refreshToken` 可能失效。此时需要重新执行上述命令，并同时更新 `NTE_REFRESH_TOKEN` 和 `NTE_DEVICE_ID`。`NTE_REPO_TOKEN` 只能回写签到接口轮换的 Token，无法同步手机登录产生的新 Token。
+> 配置自动签到后，请尽量避免在手机塔吉多 App 中重新使用手机号和验证码登录。该操作会使 GitHub Actions 正在使用的 `refreshToken` 失效，导致后续签到失败。如已重新登录，必须再次执行上述命令，并同时更新 `NTE_REFRESH_TOKEN` 和 `NTE_DEVICE_ID`。`NTE_REPO_TOKEN` 只能回写签到接口轮换的 Token，无法在旧 Token 已失效时自动恢复。
 
 ### 3. 本地执行签到
 
@@ -113,7 +113,7 @@ go run ./cmd/nte-sign
 
 | 触发方式 | 说明 |
 | --- | --- |
-| `schedule` | 每天 UTC 16:17，即北京时间次日 00:17 |
+| `schedule` | 每天 UTC 16:30，即北京时间次日 00:30 |
 | `workflow_dispatch` | 在 Actions 页面手动运行，适合首次验证和故障恢复 |
 
 GitHub 的定时任务可能因平台排队而延迟，实际开始时间不一定严格等于 cron 时间。
@@ -276,7 +276,7 @@ go run ./cmd/nte-login
 
 ### 为什么定时任务没有准点执行？
 
-GitHub Actions 的 schedule 采用 UTC，并可能受到平台调度排队影响。当前配置为每天 UTC 16:17，对应北京时间次日 00:17；延迟执行不代表工作流配置失效。
+GitHub Actions 的 schedule 采用 UTC，并可能受到平台调度排队影响。当前配置为每天 UTC 16:30，对应北京时间次日 00:30；延迟执行不代表工作流配置失效。
 
 ### 再次手动运行会重复领取奖励吗？
 
@@ -284,7 +284,7 @@ GitHub Actions 的 schedule 采用 UTC，并可能受到平台调度排队影响
 
 ### 手机登录后为什么需要重新配置？
 
-手机验证码登录可能使旧 Token 失效，且新 Token 不会自动同步到 GitHub。需要重新运行本地登录命令并更新 Secrets。
+手机塔吉多 App 的验证码登录会使旧 Token 失效，且新 Token 不会自动同步到 GitHub。配置自动签到后请尽量避免重新登录手机 App；如已登录，需要重新运行本地登录命令，并同时更新 `NTE_REFRESH_TOKEN` 和 `NTE_DEVICE_ID`。
 
 ## 开发与验证
 

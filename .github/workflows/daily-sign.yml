@@ -2,8 +2,8 @@ name: 每日签到
 
 on:
   schedule:
-    # UTC 16:17 = Asia/Shanghai 00:17
-    - cron: '17 16 * * *'
+    # UTC 16:30 = Asia/Shanghai 00:30
+    - cron: '30 16 * * *'
   workflow_dispatch:
 
 permissions:
